@@ -40,6 +40,7 @@ import {
   sanitizeRuntimeServiceBaseEnv,
 } from "./workspace-runtime.js";
 import { issueService } from "./issues.js";
+import { createKnowledgeService, type KnowledgeService } from "./knowledge.js";
 import { executionWorkspaceService, mergeExecutionWorkspaceConfig } from "./execution-workspaces.js";
 import { workspaceOperationService } from "./workspace-operations.js";
 import {
@@ -837,6 +838,7 @@ export function heartbeatService(db: Db) {
     cancelWorkForScope: cancelBudgetScopeWork,
   };
   const budgets = budgetService(db, budgetHooks);
+  const knowledgeSvc = createKnowledgeService({ db, logger });
 
   async function getAgent(agentId: string) {
     return db
@@ -2131,9 +2133,21 @@ export function heartbeatService(db: Db) {
       executionRunConfig,
     );
     const runtimeSkillEntries = await companySkills.listRuntimeSkillEntries(agent.companyId);
+
+    // Inject relevant knowledge context from the pgvector knowledge layer
+    const knowledgeScopes = parseObject(agent.adapterConfig).knowledgeScopes as string[] | undefined;
+    const issueTitle = issueContext?.title ?? "";
+    const knowledgeContext = await knowledgeSvc.getContextForTask(
+      agent.companyId,
+      issueTitle,
+      readNonEmptyString(context.taskDescription) ?? "",
+      knowledgeScopes,
+    );
+
     const runtimeConfig = {
       ...resolvedConfig,
       handrailsRuntimeSkills: runtimeSkillEntries,
+      ...(knowledgeContext ? { handrailsKnowledgeContext: knowledgeContext } : {}),
     };
     const workspaceOperationRecorder = workspaceOperationsSvc.createRecorder({
       companyId: agent.companyId,
