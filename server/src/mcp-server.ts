@@ -432,7 +432,7 @@ export function startMcpServer(deps: {
   mcpToken?: string;
 }) {
   const { db, knowledgeService } = deps;
-  const port = deps.port ?? Number(process.env.HANDRAILS_MCP_PORT) ?? 3200;
+  const port = deps.port ?? (process.env.HANDRAILS_MCP_PORT ? Number(process.env.HANDRAILS_MCP_PORT) : 3200);
   const mcpToken = deps.mcpToken ?? process.env.HANDRAILS_MCP_TOKEN;
   const handlers = createToolHandlers(db, knowledgeService);
 

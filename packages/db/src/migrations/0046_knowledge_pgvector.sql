@@ -1,5 +1,13 @@
--- Enable pgvector extension for semantic search
-CREATE EXTENSION IF NOT EXISTS vector;
+-- Enable pgvector extension for semantic search (if available)
+-- This is a no-op if pgvector is not installed; embedding column will use bytea fallback
+DO $$
+BEGIN
+  CREATE EXTENSION IF NOT EXISTS vector;
+EXCEPTION WHEN OTHERS THEN
+  RAISE NOTICE 'pgvector extension not available — vector indexes will be skipped. Install pgvector for full semantic search.';
+END $$;
+
+--> statement-breakpoint
 
 -- Knowledge documents: source of truth for company knowledge base
 CREATE TABLE IF NOT EXISTS "knowledge_documents" (
@@ -24,12 +32,13 @@ CREATE INDEX IF NOT EXISTS "knowledge_documents_content_hash_idx" ON "knowledge_
 --> statement-breakpoint
 
 -- Knowledge chunks: embedded text segments for vector search
+-- Uses vector(1536) if pgvector is available, otherwise stores embeddings as JSON text
 CREATE TABLE IF NOT EXISTS "knowledge_chunks" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   "document_id" uuid NOT NULL REFERENCES "knowledge_documents"("id") ON DELETE CASCADE,
   "company_id" uuid NOT NULL REFERENCES "companies"("id"),
   "content" text NOT NULL,
-  "embedding" vector(1536),
+  "embedding" text,
   "chunk_index" integer DEFAULT 0 NOT NULL,
   "token_count" integer,
   "metadata" text,
@@ -39,11 +48,21 @@ CREATE TABLE IF NOT EXISTS "knowledge_chunks" (
 CREATE INDEX IF NOT EXISTS "knowledge_chunks_document_idx" ON "knowledge_chunks" USING btree ("document_id");
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "knowledge_chunks_company_idx" ON "knowledge_chunks" USING btree ("company_id");
+
 --> statement-breakpoint
--- IVFFlat index for approximate nearest neighbor search
-CREATE INDEX IF NOT EXISTS "knowledge_chunks_embedding_idx" ON "knowledge_chunks" USING ivfflat ("embedding" vector_cosine_ops) WITH (lists = 100);
+
+-- Upgrade embedding column to vector type if pgvector is available
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'vector') THEN
+    ALTER TABLE "knowledge_chunks" ALTER COLUMN "embedding" TYPE vector(1536) USING "embedding"::vector(1536);
+    CREATE INDEX IF NOT EXISTS "knowledge_chunks_embedding_idx" ON "knowledge_chunks" USING ivfflat ("embedding" vector_cosine_ops) WITH (lists = 100);
+  END IF;
+END $$;
+
 --> statement-breakpoint
--- Full-text search index on content
+
+-- Full-text search (works without pgvector)
 ALTER TABLE "knowledge_chunks" ADD COLUMN IF NOT EXISTS "ts_vector" tsvector GENERATED ALWAYS AS (to_tsvector('english', "content")) STORED;
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "knowledge_chunks_ts_vector_idx" ON "knowledge_chunks" USING GIN ("ts_vector");
