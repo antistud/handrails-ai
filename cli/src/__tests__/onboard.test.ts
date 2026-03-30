@@ -3,15 +3,15 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { onboard } from "../commands/onboard.js";
-import type { PaperclipConfig } from "../config/schema.js";
+import type { HandrailsConfig } from "../config/schema.js";
 
 const ORIGINAL_ENV = { ...process.env };
 
 function createExistingConfigFixture() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-onboard-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "handrails-onboard-"));
   const runtimeRoot = path.join(root, "runtime");
-  const configPath = path.join(root, ".paperclip", "config.json");
-  const config: PaperclipConfig = {
+  const configPath = path.join(root, ".handrails", "config.json");
+  const config: HandrailsConfig = {
     $meta: {
       version: 1,
       updatedAt: "2026-03-29T00:00:00.000Z",
@@ -50,7 +50,7 @@ function createExistingConfigFixture() {
         baseDir: path.join(runtimeRoot, "storage"),
       },
       s3: {
-        bucket: "paperclip",
+        bucket: "handrails",
         region: "us-east-1",
         prefix: "",
         forcePathStyle: false,
@@ -74,9 +74,9 @@ function createExistingConfigFixture() {
 describe("onboard", () => {
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    delete process.env.PAPERCLIP_AGENT_JWT_SECRET;
-    delete process.env.PAPERCLIP_SECRETS_MASTER_KEY;
-    delete process.env.PAPERCLIP_SECRETS_MASTER_KEY_FILE;
+    delete process.env.HANDRAILS_AGENT_JWT_SECRET;
+    delete process.env.HANDRAILS_SECRETS_MASTER_KEY;
+    delete process.env.HANDRAILS_SECRETS_MASTER_KEY_FILE;
   });
 
   afterEach(() => {

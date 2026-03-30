@@ -1,11 +1,11 @@
-import type { CLIAdapterModule } from "@paperclipai/adapter-utils";
-import { printClaudeStreamEvent } from "@paperclipai/adapter-claude-local/cli";
-import { printCodexStreamEvent } from "@paperclipai/adapter-codex-local/cli";
-import { printCursorStreamEvent } from "@paperclipai/adapter-cursor-local/cli";
-import { printGeminiStreamEvent } from "@paperclipai/adapter-gemini-local/cli";
-import { printOpenCodeStreamEvent } from "@paperclipai/adapter-opencode-local/cli";
-import { printPiStreamEvent } from "@paperclipai/adapter-pi-local/cli";
-import { printOpenClawGatewayStreamEvent } from "@paperclipai/adapter-openclaw-gateway/cli";
+import type { CLIAdapterModule } from "@handrailsai/adapter-utils";
+import { printClaudeStreamEvent } from "@handrailsai/adapter-claude-local/cli";
+import { printCodexStreamEvent } from "@handrailsai/adapter-codex-local/cli";
+import { printCursorStreamEvent } from "@handrailsai/adapter-cursor-local/cli";
+import { printGeminiStreamEvent } from "@handrailsai/adapter-gemini-local/cli";
+import { printOpenCodeStreamEvent } from "@handrailsai/adapter-opencode-local/cli";
+import { printPiStreamEvent } from "@handrailsai/adapter-pi-local/cli";
+import { printOpenClawGatewayStreamEvent } from "@handrailsai/adapter-openclaw-gateway/cli";
 import { processCLIAdapter } from "./process/index.js";
 import { httpCLIAdapter } from "./http/index.js";
 

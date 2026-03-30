@@ -30,48 +30,48 @@ afterEach(() => {
 
 describe("resolveDatabaseTarget", () => {
   it("uses DATABASE_URL from process env first", () => {
-    process.env.DATABASE_URL = "postgres://env-user:env-pass@db.example.com:5432/paperclip";
+    process.env.DATABASE_URL = "postgres://env-user:env-pass@db.example.com:5432/handrails";
 
     const target = resolveDatabaseTarget();
 
     expect(target).toMatchObject({
       mode: "postgres",
-      connectionString: "postgres://env-user:env-pass@db.example.com:5432/paperclip",
+      connectionString: "postgres://env-user:env-pass@db.example.com:5432/handrails",
       source: "DATABASE_URL",
     });
   });
 
-  it("uses DATABASE_URL from repo-local .paperclip/.env", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-db-runtime-"));
+  it("uses DATABASE_URL from repo-local .handrails/.env", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "handrails-db-runtime-"));
     const projectDir = path.join(tempDir, "repo");
     fs.mkdirSync(projectDir, { recursive: true });
     process.chdir(projectDir);
-    delete process.env.PAPERCLIP_CONFIG;
-    writeJson(path.join(projectDir, ".paperclip", "config.json"), {
+    delete process.env.HANDRAILS_CONFIG;
+    writeJson(path.join(projectDir, ".handrails", "config.json"), {
       database: { mode: "embedded-postgres", embeddedPostgresPort: 54329 },
     });
     writeText(
-      path.join(projectDir, ".paperclip", ".env"),
-      'DATABASE_URL="postgres://file-user:file-pass@db.example.com:6543/paperclip"\n',
+      path.join(projectDir, ".handrails", ".env"),
+      'DATABASE_URL="postgres://file-user:file-pass@db.example.com:6543/handrails"\n',
     );
 
     const target = resolveDatabaseTarget();
 
     expect(target).toMatchObject({
       mode: "postgres",
-      connectionString: "postgres://file-user:file-pass@db.example.com:6543/paperclip",
-      source: "paperclip-env",
+      connectionString: "postgres://file-user:file-pass@db.example.com:6543/handrails",
+      source: "handrails-env",
     });
   });
 
   it("uses config postgres connection string when configured", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-db-runtime-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "handrails-db-runtime-"));
     const configPath = path.join(tempDir, "instance", "config.json");
-    process.env.PAPERCLIP_CONFIG = configPath;
+    process.env.HANDRAILS_CONFIG = configPath;
     writeJson(configPath, {
       database: {
         mode: "postgres",
-        connectionString: "postgres://cfg-user:cfg-pass@db.example.com:5432/paperclip",
+        connectionString: "postgres://cfg-user:cfg-pass@db.example.com:5432/handrails",
       },
     });
 
@@ -79,19 +79,19 @@ describe("resolveDatabaseTarget", () => {
 
     expect(target).toMatchObject({
       mode: "postgres",
-      connectionString: "postgres://cfg-user:cfg-pass@db.example.com:5432/paperclip",
+      connectionString: "postgres://cfg-user:cfg-pass@db.example.com:5432/handrails",
       source: "config.database.connectionString",
     });
   });
 
   it("falls back to embedded postgres settings from config", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "paperclip-db-runtime-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "handrails-db-runtime-"));
     const configPath = path.join(tempDir, "instance", "config.json");
-    process.env.PAPERCLIP_CONFIG = configPath;
+    process.env.HANDRAILS_CONFIG = configPath;
     writeJson(configPath, {
       database: {
         mode: "embedded-postgres",
-        embeddedPostgresDataDir: "~/paperclip-test-db",
+        embeddedPostgresDataDir: "~/handrails-test-db",
         embeddedPostgresPort: 55444,
       },
     });
@@ -100,7 +100,7 @@ describe("resolveDatabaseTarget", () => {
 
     expect(target).toMatchObject({
       mode: "embedded-postgres",
-      dataDir: path.resolve(os.homedir(), "paperclip-test-db"),
+      dataDir: path.resolve(os.homedir(), "handrails-test-db"),
       port: 55444,
       source: "embedded-postgres@55444",
     });

@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { beforeEach, describe, expect, it } from "vitest";
-import type { Approval, DashboardSummary, HeartbeatRun, Issue, JoinRequest } from "@paperclipai/shared";
+import type { Approval, DashboardSummary, HeartbeatRun, Issue, JoinRequest } from "@handrailsai/shared";
 import {
   computeInboxBadgeData,
   getApprovalsForTab,
@@ -400,7 +400,7 @@ describe("inbox helpers", () => {
   });
 
   it("maps legacy new-tab storage to mine", () => {
-    localStorage.setItem("paperclip:inbox:last-tab", "new");
+    localStorage.setItem("handrails:inbox:last-tab", "new");
     expect(loadLastInboxTab()).toBe("mine");
   });
 

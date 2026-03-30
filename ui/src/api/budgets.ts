@@ -4,7 +4,7 @@ import type {
   BudgetOverview,
   BudgetPolicySummary,
   BudgetPolicyUpsertInput,
-} from "@paperclipai/shared";
+} from "@handrailsai/shared";
 import { api } from "./client";
 
 export const budgetsApi = {

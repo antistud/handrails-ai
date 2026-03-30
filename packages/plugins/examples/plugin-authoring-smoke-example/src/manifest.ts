@@ -1,11 +1,11 @@
-import type { PaperclipPluginManifestV1 } from "@paperclipai/plugin-sdk";
+import type { HandrailsPluginManifestV1 } from "@handrailsai/plugin-sdk";
 
-const manifest: PaperclipPluginManifestV1 = {
-  id: "paperclipai.plugin-authoring-smoke-example",
+const manifest: HandrailsPluginManifestV1 = {
+  id: "handrailsai.plugin-authoring-smoke-example",
   apiVersion: 1,
   version: "0.1.0",
   displayName: "Plugin Authoring Smoke Example",
-  description: "A Paperclip plugin",
+  description: "A Handrails plugin",
   author: "Plugin Author",
   categories: ["connector"],
   capabilities: [

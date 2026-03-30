@@ -191,7 +191,7 @@ export type {
   PluginLauncherDeclaration,
   PluginMinimumHostVersion,
   PluginUiDeclaration,
-  PaperclipPluginManifestV1,
+  HandrailsPluginManifestV1,
   PluginRecord,
   PluginStateRecord,
   PluginConfig,

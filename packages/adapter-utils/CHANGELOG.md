@@ -1,4 +1,4 @@
-# @paperclipai/adapter-utils
+# @handrailsai/adapter-utils
 
 ## 0.3.1
 

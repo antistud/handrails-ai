@@ -8,7 +8,7 @@ import type {
   IssueLabel,
   IssueWorkProduct,
   UpsertIssueDocument,
-} from "@paperclipai/shared";
+} from "@handrailsai/shared";
 import { api } from "./client";
 
 export type IssueUpdateResponse = Issue & {

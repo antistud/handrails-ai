@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ExecutionWorkspace, Issue, Project, ProjectWorkspace } from "@paperclipai/shared";
+import type { ExecutionWorkspace, Issue, Project, ProjectWorkspace } from "@handrailsai/shared";
 import { buildProjectWorkspaceSummaries } from "./project-workspaces-tab";
 
 function createProjectWorkspace(overrides: Partial<ProjectWorkspace>): ProjectWorkspace {
@@ -7,7 +7,7 @@ function createProjectWorkspace(overrides: Partial<ProjectWorkspace>): ProjectWo
     id: overrides.id ?? "workspace-default",
     companyId: overrides.companyId ?? "company-1",
     projectId: overrides.projectId ?? "project-1",
-    name: overrides.name ?? "paperclip",
+    name: overrides.name ?? "handrails",
     sourceType: overrides.sourceType ?? "local_path",
     cwd: overrides.cwd ?? "/repo",
     repoUrl: overrides.repoUrl ?? null,
@@ -100,7 +100,7 @@ describe("buildProjectWorkspaceSummaries", () => {
   const primaryWorkspace = createProjectWorkspace({
     id: "workspace-default",
     isPrimary: true,
-    name: "paperclip",
+    name: "handrails",
   });
   const featureWorkspace = createProjectWorkspace({
     id: "workspace-feature",

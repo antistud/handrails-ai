@@ -29,30 +29,30 @@ FROM base AS build
 WORKDIR /app
 COPY --from=deps /app /app
 COPY . .
-RUN pnpm --filter @paperclipai/ui build
-RUN pnpm --filter @paperclipai/plugin-sdk build
-RUN pnpm --filter @paperclipai/server build
+RUN pnpm --filter @handrailsai/ui build
+RUN pnpm --filter @handrailsai/plugin-sdk build
+RUN pnpm --filter @handrailsai/server build
 RUN test -f server/dist/index.js || (echo "ERROR: server build output missing" && exit 1)
 
 FROM base AS production
 WORKDIR /app
 COPY --chown=node:node --from=build /app /app
 RUN npm install --global --omit=dev @anthropic-ai/claude-code@latest @openai/codex@latest opencode-ai \
-  && mkdir -p /paperclip \
-  && chown node:node /paperclip
+  && mkdir -p /handrails \
+  && chown node:node /handrails
 
 ENV NODE_ENV=production \
-  HOME=/paperclip \
+  HOME=/handrails \
   HOST=0.0.0.0 \
   PORT=3100 \
   SERVE_UI=true \
-  PAPERCLIP_HOME=/paperclip \
-  PAPERCLIP_INSTANCE_ID=default \
-  PAPERCLIP_CONFIG=/paperclip/instances/default/config.json \
-  PAPERCLIP_DEPLOYMENT_MODE=authenticated \
-  PAPERCLIP_DEPLOYMENT_EXPOSURE=private
+  HANDRAILS_HOME=/handrails \
+  HANDRAILS_INSTANCE_ID=default \
+  HANDRAILS_CONFIG=/handrails/instances/default/config.json \
+  HANDRAILS_DEPLOYMENT_MODE=authenticated \
+  HANDRAILS_DEPLOYMENT_EXPOSURE=private
 
-VOLUME ["/paperclip"]
+VOLUME ["/handrails"]
 EXPOSE 3100
 
 USER node

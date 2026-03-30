@@ -12,7 +12,7 @@ import {
   issues,
   projectWorkspaces,
   projects,
-} from "@paperclipai/db";
+} from "@handrailsai/db";
 import {
   getEmbeddedPostgresTestSupport,
   startEmbeddedPostgresTestDatabase,
@@ -108,10 +108,10 @@ async function runGit(cwd: string, args: string[]) {
 }
 
 async function createTempRepo() {
-  const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-execution-workspace-"));
+  const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "handrails-execution-workspace-"));
   await runGit(repoRoot, ["init"]);
-  await runGit(repoRoot, ["config", "user.name", "Paperclip Test"]);
-  await runGit(repoRoot, ["config", "user.email", "test@paperclip.local"]);
+  await runGit(repoRoot, ["config", "user.name", "Handrails Test"]);
+  await runGit(repoRoot, ["config", "user.email", "test@handrails.local"]);
   await fs.writeFile(path.join(repoRoot, "README.md"), "# Test repo\n", "utf8");
   await runGit(repoRoot, ["add", "README.md"]);
   await runGit(repoRoot, ["commit", "-m", "Initial commit"]);
@@ -126,7 +126,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
   const tempDirs = new Set<string>();
 
   beforeAll(async () => {
-    tempDb = await startEmbeddedPostgresTestDatabase("paperclip-execution-workspaces-service-");
+    tempDb = await startEmbeddedPostgresTestDatabase("handrails-execution-workspaces-service-");
     db = createDb(tempDb.connectionString);
     svc = executionWorkspaceService(db);
   }, 20_000);
@@ -156,7 +156,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "Handrails",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -176,7 +176,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       name: "Primary",
       sourceType: "local_path",
       isPrimary: true,
-      cwd: "/tmp/paperclip-primary",
+      cwd: "/tmp/handrails-primary",
     });
     await db.insert(executionWorkspaces).values({
       id: executionWorkspaceId,
@@ -188,7 +188,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       name: "Shared workspace",
       status: "active",
       providerType: "local_fs",
-      cwd: "/tmp/paperclip-primary",
+      cwd: "/tmp/handrails-primary",
       metadata: {
         config: {
           teardownCommand: "bash ./scripts/teardown.sh",
@@ -224,11 +224,11 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
   it("warns about dirty and unmerged git worktrees and reports cleanup actions", async () => {
     const repoRoot = await createTempRepo();
     tempDirs.add(repoRoot);
-    const worktreePath = path.join(path.dirname(repoRoot), `paperclip-worktree-${randomUUID()}`);
+    const worktreePath = path.join(path.dirname(repoRoot), `handrails-worktree-${randomUUID()}`);
     tempDirs.add(worktreePath);
 
-    await runGit(repoRoot, ["branch", "paperclip-close-check"]);
-    await runGit(repoRoot, ["worktree", "add", worktreePath, "paperclip-close-check"]);
+    await runGit(repoRoot, ["branch", "handrails-close-check"]);
+    await runGit(repoRoot, ["worktree", "add", worktreePath, "handrails-close-check"]);
     await fs.writeFile(path.join(worktreePath, "feature.txt"), "hello\n", "utf8");
     await runGit(worktreePath, ["add", "feature.txt"]);
     await runGit(worktreePath, ["commit", "-m", "Feature commit"]);
@@ -241,7 +241,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
 
     await db.insert(companies).values({
       id: companyId,
-      name: "Paperclip",
+      name: "Handrails",
       issuePrefix: "PAP",
       requireBoardApprovalForNewAgents: false,
     });
@@ -280,7 +280,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       providerType: "git_worktree",
       cwd: worktreePath,
       providerRef: worktreePath,
-      branchName: "paperclip-close-check",
+      branchName: "handrails-close-check",
       baseRef: "main",
       metadata: {
         createdByRuntime: true,
@@ -300,7 +300,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
       isDestructiveCloseAllowed: true,
       git: {
         workspacePath: worktreePath,
-        branchName: "paperclip-close-check",
+        branchName: "handrails-close-check",
         baseRef: "main",
         createdByRuntime: true,
         hasDirtyTrackedFiles: false,

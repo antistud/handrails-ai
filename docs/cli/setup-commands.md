@@ -5,35 +5,35 @@ summary: Onboard, run, doctor, and configure
 
 Instance setup and diagnostics commands.
 
-## `paperclipai run`
+## `handrailsai run`
 
 One-command bootstrap and start:
 
 ```sh
-pnpm paperclipai run
+pnpm handrailsai run
 ```
 
 Does:
 
 1. Auto-onboards if config is missing
-2. Runs `paperclipai doctor` with repair enabled
+2. Runs `handrailsai doctor` with repair enabled
 3. Starts the server when checks pass
 
 Choose a specific instance:
 
 ```sh
-pnpm paperclipai run --instance dev
+pnpm handrailsai run --instance dev
 ```
 
-## `paperclipai onboard`
+## `handrailsai onboard`
 
 Interactive first-time setup:
 
 ```sh
-pnpm paperclipai onboard
+pnpm handrailsai onboard
 ```
 
-If Paperclip is already configured, rerunning `onboard` keeps the existing config in place. Use `paperclipai configure` to change settings on an existing install.
+If Handrails is already configured, rerunning `onboard` keeps the existing config in place. Use `handrailsai configure` to change settings on an existing install.
 
 First prompt:
 
@@ -43,24 +43,24 @@ First prompt:
 Start immediately after onboarding:
 
 ```sh
-pnpm paperclipai onboard --run
+pnpm handrailsai onboard --run
 ```
 
 Non-interactive defaults + immediate start (opens browser on server listen):
 
 ```sh
-pnpm paperclipai onboard --yes
+pnpm handrailsai onboard --yes
 ```
 
-On an existing install, `--yes` now preserves the current config and just starts Paperclip with that setup.
+On an existing install, `--yes` now preserves the current config and just starts Handrails with that setup.
 
-## `paperclipai doctor`
+## `handrailsai doctor`
 
 Health checks with optional auto-repair:
 
 ```sh
-pnpm paperclipai doctor
-pnpm paperclipai doctor --repair
+pnpm handrailsai doctor
+pnpm handrailsai doctor --repair
 ```
 
 Validates:
@@ -71,51 +71,51 @@ Validates:
 - Storage configuration
 - Missing key files
 
-## `paperclipai configure`
+## `handrailsai configure`
 
 Update configuration sections:
 
 ```sh
-pnpm paperclipai configure --section server
-pnpm paperclipai configure --section secrets
-pnpm paperclipai configure --section storage
+pnpm handrailsai configure --section server
+pnpm handrailsai configure --section secrets
+pnpm handrailsai configure --section storage
 ```
 
-## `paperclipai env`
+## `handrailsai env`
 
 Show resolved environment configuration:
 
 ```sh
-pnpm paperclipai env
+pnpm handrailsai env
 ```
 
-## `paperclipai allowed-hostname`
+## `handrailsai allowed-hostname`
 
 Allow a private hostname for authenticated/private mode:
 
 ```sh
-pnpm paperclipai allowed-hostname my-tailscale-host
+pnpm handrailsai allowed-hostname my-tailscale-host
 ```
 
 ## Local Storage Paths
 
 | Data | Default Path |
 |------|-------------|
-| Config | `~/.paperclip/instances/default/config.json` |
-| Database | `~/.paperclip/instances/default/db` |
-| Logs | `~/.paperclip/instances/default/logs` |
-| Storage | `~/.paperclip/instances/default/data/storage` |
-| Secrets key | `~/.paperclip/instances/default/secrets/master.key` |
+| Config | `~/.handrails/instances/default/config.json` |
+| Database | `~/.handrails/instances/default/db` |
+| Logs | `~/.handrails/instances/default/logs` |
+| Storage | `~/.handrails/instances/default/data/storage` |
+| Secrets key | `~/.handrails/instances/default/secrets/master.key` |
 
 Override with:
 
 ```sh
-PAPERCLIP_HOME=/custom/home PAPERCLIP_INSTANCE_ID=dev pnpm paperclipai run
+HANDRAILS_HOME=/custom/home HANDRAILS_INSTANCE_ID=dev pnpm handrailsai run
 ```
 
 Or pass `--data-dir` directly on any command:
 
 ```sh
-pnpm paperclipai run --data-dir ./tmp/paperclip-dev
-pnpm paperclipai doctor --data-dir ./tmp/paperclip-dev
+pnpm handrailsai run --data-dir ./tmp/handrails-dev
+pnpm handrailsai doctor --data-dir ./tmp/handrails-dev
 ```

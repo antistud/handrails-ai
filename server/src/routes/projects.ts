@@ -1,12 +1,12 @@
 import { Router, type Request } from "express";
-import type { Db } from "@paperclipai/db";
+import type { Db } from "@handrailsai/db";
 import {
   createProjectSchema,
   createProjectWorkspaceSchema,
   isUuidLike,
   updateProjectSchema,
   updateProjectWorkspaceSchema,
-} from "@paperclipai/shared";
+} from "@handrailsai/shared";
 import { validate } from "../middleware/validate.js";
 import { projectService, logActivity, workspaceOperationService } from "../services/index.js";
 import { conflict } from "../errors.js";
@@ -255,7 +255,7 @@ export function projectRoutes(db: Db) {
 
     const workspaceCwd = workspace.cwd;
     if (!workspaceCwd) {
-      res.status(422).json({ error: "Project workspace needs a local path before Paperclip can manage local runtime services" });
+      res.status(422).json({ error: "Project workspace needs a local path before Handrails can manage local runtime services" });
       return;
     }
 
