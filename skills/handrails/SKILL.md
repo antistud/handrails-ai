@@ -137,6 +137,15 @@ Authorized managers can install company skills independently of hiring, then ass
 If you are asked to install a skill for the company or an agent you MUST read:
 `skills/handrails/references/company-skills.md`
 
+## Knowledge Base
+
+You have access to a company knowledge base with SOPs, documentation, and institutional knowledge. Relevant knowledge is **automatically injected** into your context for each task via `handrailsKnowledgeContext`.
+
+To search explicitly: `POST /api/companies/{companyId}/knowledge/search` with `{ "query": "...", "limit": 5 }`.
+To add knowledge: `POST /api/companies/{companyId}/knowledge/documents` with `{ "title": "...", "content": "..." }`.
+
+For full knowledge API details, read: `skills/handrails-knowledge/SKILL.md`
+
 ## Critical Rules
 
 - **Always checkout** before working. Never PATCH to `in_progress` manually.
