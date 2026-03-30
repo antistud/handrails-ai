@@ -599,3 +599,11 @@ export {
   type SecretsLocalEncryptedConfig,
   type ConfigMeta,
 } from "./config-schema.js";
+
+export {
+  type BusinessManifest,
+  type AgentDefinition,
+  type EmailRouteConfig,
+  type EmailConfig,
+  createDefaultManifest,
+} from "./business-manifest.js";

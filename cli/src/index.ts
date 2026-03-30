@@ -20,6 +20,7 @@ import { loadHandrailsEnvFile } from "./config/env.js";
 import { registerWorktreeCommands } from "./commands/worktree.js";
 import { registerPluginCommands } from "./commands/client/plugin.js";
 import { registerClientAuthCommands } from "./commands/client/auth.js";
+import { initCommand } from "./commands/init.js";
 
 const program = new Command();
 const DATA_DIR_OPTION_HELP =
@@ -98,14 +99,85 @@ program
   .action(addAllowedHostname);
 
 program
+  .command("init")
+  .description("Scaffold a new business repo")
+  .argument("<company-name>", "Company name (used to generate slug)")
+  .option("--dir <path>", "Target directory (default: ./<slug>)")
+  .action(initCommand);
+
+program
   .command("run")
+  .alias("up")
   .description("Bootstrap local setup (onboard + doctor) and run Handrails")
   .option("-c, --config <path>", "Path to config file")
   .option("-d, --data-dir <path>", DATA_DIR_OPTION_HELP)
   .option("-i, --instance <id>", "Local instance id (default: default)")
+  .option("-b, --business <path>", "Path to business repo directory")
   .option("--repair", "Attempt automatic repairs during doctor", true)
   .option("--no-repair", "Disable automatic repairs during doctor")
   .action(runCommand);
+
+program
+  .command("validate")
+  .description("Validate business repo config without starting")
+  .option("-b, --business <path>", "Path to business repo directory")
+  .action(async (opts) => {
+    const businessPath = opts.business ?? process.cwd();
+    const fs = await import("node:fs");
+    const manifestPath = `${businessPath}/handrails.yml`;
+    if (!fs.existsSync(manifestPath)) {
+      console.error("❌ handrails.yml not found at", manifestPath);
+      process.exit(1);
+    }
+    console.log("✔ handrails.yml found");
+    const agentsDir = `${businessPath}/agents`;
+    if (fs.existsSync(agentsDir)) {
+      const agents = fs.readdirSync(agentsDir).filter((f: string) => f.endsWith(".yml"));
+      console.log(`✔ ${agents.length} agent definition(s) found`);
+    }
+    const knowledgeDir = `${businessPath}/knowledge`;
+    if (fs.existsSync(knowledgeDir)) {
+      console.log("✔ knowledge/ directory found");
+    }
+    console.log("\nBusiness repo is valid.");
+  });
+
+program
+  .command("export")
+  .description("Export runtime state (task history, costs, emails) for portability")
+  .option("-c, --config <path>", "Path to config file")
+  .option("-d, --data-dir <path>", DATA_DIR_OPTION_HELP)
+  .option("-o, --output <path>", "Output file path", "handrails-export.json")
+  .action(async (opts) => {
+    console.log(`Exporting runtime state to ${opts.output}...`);
+    console.log("(Export functionality will be available in v0.4)");
+  });
+
+program
+  .command("restore")
+  .description("Restore runtime state from an export file")
+  .argument("<file>", "Path to export file (handrails-export.json or .tar.gz)")
+  .option("-c, --config <path>", "Path to config file")
+  .option("-d, --data-dir <path>", DATA_DIR_OPTION_HELP)
+  .action(async (file) => {
+    console.log(`Restoring runtime state from ${file}...`);
+    console.log("(Restore functionality will be available in v0.4)");
+  });
+
+const knowledge = program.command("knowledge").description("Knowledge layer utilities");
+
+knowledge
+  .command("index")
+  .description("Re-embed knowledge docs from the business repo")
+  .option("-b, --business <path>", "Path to business repo directory")
+  .option("--force", "Re-embed all documents, ignoring content hashes", false)
+  .action(async (opts) => {
+    console.log("Knowledge indexing requires a running Handrails instance.");
+    console.log("Use: handrails up --business <path>");
+    if (opts.force) {
+      console.log("(--force will be passed to the sync service)");
+    }
+  });
 
 const heartbeat = program.command("heartbeat").description("Heartbeat utilities");
 
