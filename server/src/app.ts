@@ -32,6 +32,8 @@ import { pluginRoutes } from "./routes/plugins.js";
 import { pluginUiStaticRoutes } from "./routes/plugin-ui-static.js";
 import { knowledgeRoutes } from "./routes/knowledge.js";
 import { createKnowledgeService } from "./services/knowledge.js";
+import { emailRoutes } from "./routes/email.js";
+import { createEmailService } from "./services/email.js";
 import { applyUiBranding } from "./ui-branding.js";
 import { logger } from "./middleware/logger.js";
 import { DEFAULT_LOCAL_PLUGIN_DIR, pluginLoader } from "./services/plugin-loader.js";
@@ -157,6 +159,15 @@ export async function createApp(
   // Knowledge layer
   const knowledgeService = createKnowledgeService({ db, logger });
   api.use(knowledgeRoutes(db, knowledgeService));
+
+  // Email — external boundary
+  const emailService = createEmailService({
+    db,
+    logger,
+    config: { mode: "managed" },
+    routes: [],
+  });
+  api.use(emailRoutes(db, emailService));
 
   api.use(activityRoutes(db));
   api.use(dashboardRoutes(db));
