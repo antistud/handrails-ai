@@ -33,6 +33,8 @@ import { createStorageServiceFromConfig } from "./storage/index.js";
 import { printStartupBanner } from "./startup-banner.js";
 import { getBoardClaimWarningUrl, initializeBoardClaimChallenge } from "./board-claim.js";
 import { maybePersistWorktreeRuntimePorts } from "./worktree-config.js";
+import { startMcpServer } from "./mcp-server.js";
+import { createKnowledgeService } from "./services/knowledge.js";
 
 type BetterAuthSessionUser = {
   id: string;
@@ -712,10 +714,17 @@ export async function startServer(): Promise<StartedServer> {
         );
       }
 
+      // Start MCP server for Claude Code integration (SSE transport)
+      const mcpKnowledgeService = createKnowledgeService({ db: db as any, logger });
+      startMcpServer({
+        db: db as any,
+        knowledgeService: mcpKnowledgeService,
+      });
+
       resolveListen();
     });
   });
-  
+
   if (embeddedPostgres && embeddedPostgresStartedByThisProcess) {
     const shutdown = async (signal: "SIGINT" | "SIGTERM") => {
       logger.info({ signal }, "Stopping embedded PostgreSQL");
