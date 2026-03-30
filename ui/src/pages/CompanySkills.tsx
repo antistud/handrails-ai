@@ -46,7 +46,7 @@ import {
   Github,
   Link2,
   ExternalLink,
-  Handrails,
+  Paperclip,
   Pencil,
   Plus,
   RefreshCw,
@@ -159,7 +159,7 @@ function sourceMeta(sourceBadge: CompanySkillSourceBadge, sourceLabel: string | 
     case "local":
       return { icon: Folder, label: sourceLabel ?? "Folder", managedLabel: "Folder managed" };
     case "handrails":
-      return { icon: Handrails, label: sourceLabel ?? "Handrails", managedLabel: "Handrails managed" };
+      return { icon: Paperclip, label: sourceLabel ?? "Handrails", managedLabel: "Handrails managed" };
     default:
       return { icon: Boxes, label: sourceLabel ?? "Catalog", managedLabel: "Catalog managed" };
   }

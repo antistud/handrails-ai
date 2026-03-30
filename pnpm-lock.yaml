@@ -251,7 +251,7 @@ importers:
         specifier: ^3.0.5
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.12.0)(jiti@2.6.1)(jsdom@28.1.0(@noble/hashes@2.0.1))(lightningcss@1.30.2)(tsx@4.21.0)
 
-  packages/plugins/create-paperclip-plugin:
+  packages/plugins/create-handrails-plugin:
     dependencies:
       '@handrailsai/plugin-sdk':
         specifier: workspace:*
@@ -315,12 +315,12 @@ importers:
       '@codemirror/view':
         specifier: ^6.28.0
         version: 6.39.15
-      '@lezer/highlight':
-        specifier: ^1.2.1
-        version: 1.2.3
       '@handrailsai/plugin-sdk':
         specifier: workspace:*
         version: link:../../sdk
+      '@lezer/highlight':
+        specifier: ^1.2.1
+        version: 1.2.3
       codemirror:
         specifier: ^6.0.1
         version: 6.0.2
@@ -588,12 +588,6 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.2.4)
-      '@lexical/link':
-        specifier: 0.35.0
-        version: 0.35.0
-      '@mdxeditor/editor':
-        specifier: ^3.52.4
-        version: 3.52.4(@codemirror/language@6.12.1)(@lezer/highlight@1.2.3)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.29)
       '@handrailsai/adapter-claude-local':
         specifier: workspace:*
         version: link:../packages/adapters/claude-local
@@ -621,6 +615,12 @@ importers:
       '@handrailsai/shared':
         specifier: workspace:*
         version: link:../packages/shared
+      '@lexical/link':
+        specifier: 0.35.0
+        version: 0.35.0
+      '@mdxeditor/editor':
+        specifier: ^3.52.4
+        version: 3.52.4(@codemirror/language@6.12.1)(@lezer/highlight@1.2.3)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(yjs@13.6.29)
       '@radix-ui/react-slot':
         specifier: ^1.2.4
         version: 1.2.4(@types/react@19.2.14)(react@19.2.4)
@@ -2043,7 +2043,7 @@ packages:
   '@open-draft/deferred-promise@2.2.0':
     resolution: {integrity: sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA==}
 
-  '@handrailsai/adapter-utils@2026.325.0':
+  '@paperclipai/adapter-utils@2026.325.0':
     resolution: {integrity: sha512-YDVSAgjkeJ0PvxXDJVN9MZDX7oYRzidLtGHmGgRGd6gSk/bF2ygAKvND4FI1YxDc/cRLQjqAFCpCYaC/9wqIEA==}
 
   '@paralleldrive/cuid2@2.3.1':
@@ -7743,7 +7743,7 @@ snapshots:
 
   '@open-draft/deferred-promise@2.2.0': {}
 
-  '@handrailsai/adapter-utils@2026.325.0': {}
+  '@paperclipai/adapter-utils@2026.325.0': {}
 
   '@paralleldrive/cuid2@2.3.1':
     dependencies:
@@ -10342,7 +10342,7 @@ snapshots:
 
   hermes-paperclip-adapter@0.2.0:
     dependencies:
-      '@handrailsai/adapter-utils': 2026.325.0
+      '@paperclipai/adapter-utils': 2026.325.0
       picocolors: 1.1.1
 
   html-encoding-sniffer@6.0.0(@noble/hashes@2.0.1):

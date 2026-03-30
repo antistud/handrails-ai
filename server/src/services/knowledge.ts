@@ -11,8 +11,7 @@
 import { and, eq, sql, inArray, type SQL } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { Logger } from "pino";
-import { knowledgeDocuments } from "@handrailsai/db/schema/knowledge_documents.js";
-import { knowledgeChunks } from "@handrailsai/db/schema/knowledge_chunks.js";
+import { knowledgeDocuments, knowledgeChunks } from "@handrailsai/db";
 import {
   type EmbeddingProvider,
   createOpenAIEmbeddingProvider,

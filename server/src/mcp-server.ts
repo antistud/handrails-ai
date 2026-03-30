@@ -327,13 +327,13 @@ function createToolHandlers(db: Db, knowledgeService: KnowledgeService) {
         return { content: [{ type: "text", text: "{}" }] };
       }
       if (args.key) {
-        const data = state.state as Record<string, unknown>;
+        const data = (state.stateJson ?? {}) as Record<string, unknown>;
         return {
           content: [{ type: "text", text: JSON.stringify(data[args.key as string] ?? null) }],
         };
       }
       return {
-        content: [{ type: "text", text: JSON.stringify(state.state, null, 2) }],
+        content: [{ type: "text", text: JSON.stringify(state.stateJson, null, 2) }],
       };
     },
 
@@ -349,17 +349,19 @@ function createToolHandlers(db: Db, knowledgeService: KnowledgeService) {
         .where(eq(agentRuntimeState.agentId, agentId));
 
       if (existing.length > 0) {
-        const currentState = (existing[0]!.state ?? {}) as Record<string, unknown>;
+        const currentState = (existing[0]!.stateJson ?? {}) as Record<string, unknown>;
         currentState[key] = value;
         await db
           .update(agentRuntimeState)
-          .set({ state: currentState, updatedAt: new Date() })
+          .set({ stateJson: currentState, updatedAt: new Date() })
           .where(eq(agentRuntimeState.agentId, agentId));
       } else {
-        await db.insert(agentRuntimeState).values({
-          agentId,
-          state: { [key]: value },
-        });
+        // memory_set requires an existing agent runtime state row;
+        // it's created when the agent first runs. Return a helpful error.
+        return {
+          content: [{ type: "text", text: `No runtime state found for agent ${agentId}. The agent must run at least once first.` }],
+          isError: true,
+        };
       }
 
       return {

@@ -14,9 +14,10 @@ const vector = customType<{ data: number[]; driverParam: string }>({
   toDriver(value: number[]): string {
     return `[${value.join(",")}]`;
   },
-  fromDriver(value: string): number[] {
+  fromDriver(value: unknown): number[] {
     // Postgres returns vectors as '[1,2,3]'
-    return value
+    const str = String(value);
+    return str
       .slice(1, -1)
       .split(",")
       .map(Number);

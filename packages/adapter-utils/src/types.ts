@@ -161,6 +161,7 @@ export type AdapterSkillState =
 export type AdapterSkillOrigin =
   | "company_managed"
   | "handrails_required"
+  | "paperclip_required" // compat: hermes-paperclip-adapter uses this
   | "user_installed"
   | "external_unknown";
 
